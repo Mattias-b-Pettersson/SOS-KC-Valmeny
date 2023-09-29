@@ -1,0 +1,29 @@
+
+########################################
+2023-07-31, 08:34 - D4VV Lägger till behörigheter på HSA-ID 1234 under Kardiologi, Södersjukhuset AB
+- Hittade inte 1234 i EK 
+
+########################################
+2023-07-31, 08:57 - D4VV Lägger till behörigheter på HSA-ID 1234 under Internmedicin, Södersjukhuset AB
+- Hittade inte 1234 i EK 
+
+########################################
+2023-07-31, 08:59 - D4VV Lägger till behörigheter på HSA-ID 1234 under Kirurgi, Södersjukhuset AB
+- Hittade inte 1234 i EK 
+
+########################################
+2023-07-31, 13:22 - D4VV Lägger till behörigheter på HSA-ID 65RN under Bilddiagnostik, Södersjukhuset AB
+- Rörpost behörigheten Hittades inte. Redan tilldelad? 
+- Ligger redan med i Vårdmedarbetaruppdrag "Vård och behandling-Bild SÖS". Hoppade över. 
+
+########################################
+2023-07-31, 14:28 - D4VV Lägger till behörigheter på HSA-ID 1234 under Infektionskliniken-Venhälsan, Specialistvård, Södersjukhuset AB
+- Hittade inte 1234 i EK 
+
+########################################
+2023-07-31, 15:12 - D4VV Lägger till behörigheter på HSA-ID G45H under Anestesi IVA, Södersjukhuset AB
+- Ingen användare hittades som matchar HSA-ID och arbetsplats. 
+
+########################################
+2023-07-31, 15:14 - D4VV Lägger till behörigheter på HSA-ID 65RN under Bilddiagnostik, Södersjukhuset AB
+- Lagt till rörpost. 

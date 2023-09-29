@@ -1,0 +1,239 @@
+
+########################################
+
+- Ärendenummer RITM2317435
+- fixar Edit för 41S2- Ingen användare hittades som matchar HSA-ID och arbetsplats. 
+
+- Behörighet redan borttagen
+########################################
+
+- Ärendenummer RITM2317435
+- fixar Edit för 41S2- Ingen användare hittades som matchar HSA-ID och arbetsplats. 
+
+- Behörighet redan borttagen
+########################################
+
+- Ärendenummer RITM2319410
+- fixar Rörpost för GLV8
+########################################
+
+- Ärendenummer RITM2319410
+- fixar Rörpost för GLV8
+########################################
+
+- Ärendenummer RITM2319686
+- fixar Edit för 1DN5
+RITM2319686 - Tagit bort behörigheter för 1DN5
+########################################
+
+- Ärendenummer RITM2319686
+- fixar Edit för 1DN5
+RITM2319686 - Tagit bort behörigheter för 1DN5
+########################################
+
+- Ärendenummer RITM2321372
+- fixar Rörpost för D68G- Ingen användare hittades som matchar HSA-ID och arbetsplats. 
+
+- Ingen användare hittades som matchar HSA-IDt D68G och arbetsplats. Kontrollera manuellt.
+########################################
+
+- Ärendenummer RITM2321367
+- fixar Rörpost för DJXM
+RITM2321367 - Lagt till rörpost behörigheter för DJXM
+########################################
+
+- Ärendenummer RITM2321363
+- fixar Rörpost för 230V- Ingen användare hittades som matchar HSA-ID och arbetsplats. 
+
+- Ingen användare hittades som matchar HSA-IDt 230V och arbetsplats. Kontrollera manuellt.
+########################################
+
+- Ärendenummer RITM2321360
+- fixar Rörpost för GNW7
+RITM2321360 - Lagt till rörpost behörigheter för GNW7
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på SÖS. Hantera manuellt.
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på SÖS. Hantera manuellt.
+########################################
+
+- Ärendenummer RITM2321372
+- fixar Rörpost för D68G- Ingen användare hittades som matchar HSA-ID och arbetsplats. 
+
+- Ingen användare hittades som matchar HSA-IDt D68G och arbetsplats. Kontrollera manuellt.
+########################################
+
+- Ärendenummer RITM2321367
+- fixar Rörpost för DJXM
+RITM2321367 - Lagt till rörpost behörigheter för DJXM
+########################################
+
+- Ärendenummer RITM2321363
+- fixar Rörpost för 230V- Ingen användare hittades som matchar HSA-ID och arbetsplats. 
+
+- Ingen användare hittades som matchar HSA-IDt 230V och arbetsplats. Kontrollera manuellt.
+########################################
+
+- Ärendenummer RITM2321557
+- fixar Rörpost för 9D92
+RITM2321557 - Lagt till rörpost behörigheter för 9D92
+########################################
+
+- Ärendenummer RITM2321557
+- fixar Rörpost för 9D92
+RITM2321557 - Lagt till rörpost behörigheter för 9D92
+########################################
+
+- Ärendenummer RITM2321547
+- fixar Rörpost för 5SZ2
+########################################
+
+- Ärendenummer RITM2321557
+- fixar Rörpost för 9D92
+RITM2321557 - Lagt till rörpost behörigheter för 9D92
+########################################
+
+- Ärendenummer RITM2321547
+- fixar Rörpost för 5SZ2
+########################################
+
+- Ärendenummer RITM2321557
+- fixar Rörpost för 9D92
+RITM2321557 - Lagt till rörpost behörigheter för 9D92
+########################################
+
+- Ärendenummer RITM2321547
+- fixar Rörpost för 5SZ2
+########################################
+
+- Ärendenummer RITM2321372
+- fixar Rörpost för D68G
+RITM2321372 - Lagt till rörpost behörigheter för D68G
+########################################
+
+- Ärendenummer RITM2321367
+- fixar Rörpost för DJXM
+RITM2321367 - Lagt till rörpost behörigheter för DJXM
+########################################
+
+- Ärendenummer RITM2321363
+- fixar Rörpost för 230V
+RITM2321363 - Lagt till rörpost behörigheter för 230V
+########################################
+
+- Ärendenummer RITM2321360
+- fixar Rörpost för GNW7
+RITM2321360 - Lagt till rörpost behörigheter för GNW7
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+########################################
+
+- Ärendenummer RITM2321557
+- fixar Rörpost för 9D92
+RITM2321557 - Lagt till rörpost behörigheter för 9D92
+########################################
+
+- Ärendenummer RITM2321547
+- fixar Rörpost för 5SZ2
+########################################
+
+- Ärendenummer RITM2321372
+- fixar Rörpost för D68G
+RITM2321372 - Lagt till rörpost behörigheter för D68G
+########################################
+
+- Ärendenummer RITM2321367
+- fixar Rörpost för DJXM
+RITM2321367 - Lagt till rörpost behörigheter för DJXM
+########################################
+
+- Ärendenummer RITM2321363
+- fixar Rörpost för 230V
+RITM2321363 - Lagt till rörpost behörigheter för 230V
+########################################
+
+- Ärendenummer RITM2321360
+- fixar Rörpost för GNW7
+RITM2321360 - Lagt till rörpost behörigheter för GNW7
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+- Användaren har mer än 1 personpost på karolinska, Hantera RITM2321286 manuellt.
+########################################
+
+- Ärendenummer RITM2321285
+- fixar Rörpost för 7BGD
+########################################
+
+- Ärendenummer RITM2320848
+- fixar Rörpost för FVJM
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+- Användaren har mer än 1 personpost på karolinska, Hantera RITM2321286 manuellt.
+########################################
+
+- Ärendenummer RITM2320684
+- fixar Rörpost för CD29
+RITM2320684 - Lagt till rörpost behörigheter för CD29
+########################################
+
+- Ärendenummer RITM2320668
+- fixar Rörpost för G325
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+- Användaren har mer än 1 personpost på karolinska, Hantera RITM2320668 manuellt.
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+- Användaren har mer än 1 personpost på karolinska, Hantera RITM2321286 manuellt.
+########################################
+
+- Ärendenummer RITM2320668
+- fixar Rörpost för G325
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+- Användaren har mer än 1 personpost på karolinska, Hantera RITM2320668 manuellt.
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+- Användaren har mer än 1 personpost på karolinska, Hantera RITM2321286 manuellt.
+########################################
+/n- Webläsaren stängdes oväntat... Provar på nytt.
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+- Användaren har mer än 1 personpost på karolinska, Hantera RITM2321286 manuellt.
+########################################
+
+- Ärendenummer RITM2321286
+- fixar Rörpost för CD1Z
+- Användaren har mer än en personpost på Karolinska. Hantera manuellt.
+- Användaren har mer än 1 personpost på karolinska, Hantera RITM2321286 manuellt.

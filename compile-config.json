@@ -1,0 +1,101 @@
+{
+ "version": "auto-py-to-exe-configuration_v1",
+ "pyinstallerOptions": [
+  {
+   "optionDest": "noconfirm",
+   "value": true
+  },
+  {
+   "optionDest": "filenames",
+   "value": "C:/Users/d4vv/PycharmProjects/s\u00f6skc profiler/main.py"
+  },
+  {
+   "optionDest": "onefile",
+   "value": false
+  },
+  {
+   "optionDest": "console",
+   "value": false
+  },
+  {
+   "optionDest": "icon_file",
+   "value": "C:/Users/d4vv/PycharmProjects/s\u00f6skc profiler/icon.ico"
+  },
+  {
+   "optionDest": "name",
+   "value": "S\u00d6S-KC Valmeny 3.3"
+  },
+  {
+   "optionDest": "ascii",
+   "value": false
+  },
+  {
+   "optionDest": "clean_build",
+   "value": false
+  },
+  {
+   "optionDest": "strip",
+   "value": false
+  },
+  {
+   "optionDest": "noupx",
+   "value": false
+  },
+  {
+   "optionDest": "disable_windowed_traceback",
+   "value": false
+  },
+  {
+   "optionDest": "embed_manifest",
+   "value": false
+  },
+  {
+   "optionDest": "uac_admin",
+   "value": false
+  },
+  {
+   "optionDest": "uac_uiaccess",
+   "value": false
+  },
+  {
+   "optionDest": "win_private_assemblies",
+   "value": false
+  },
+  {
+   "optionDest": "win_no_prefer_redirects",
+   "value": false
+  },
+  {
+   "optionDest": "bootloader_ignore_signals",
+   "value": false
+  },
+  {
+   "optionDest": "argv_emulation",
+   "value": false
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/d4vv/PycharmProjects/s\u00f6skc profiler/icon.ico;."
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "selenium"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "webdriver_manager"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "customtkinter"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/d4vv/AppData/Local/Programs/Python/Python310/Lib/site-packages/customtkinter;customtkinter/"
+  }
+ ],
+ "nonPyinstallerOptions": {
+  "increaseRecursionLimit": true,
+  "manualArguments": ""
+ }
+}

@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "C:/Users/d4vv/PycharmProjects/s\u00f6skc profiler/main.py"
+   "value": "C:\\Users\\d4vv\\PycharmProjects\\SOS-KC-Valmeny\\main.py"
   },
   {
    "optionDest": "onefile",
@@ -19,7 +19,7 @@
   },
   {
    "optionDest": "icon_file",
-   "value": "C:/Users/d4vv/PycharmProjects/s\u00f6skc profiler/icon.ico"
+   "value": "C:/Users/d4vv/PycharmProjects/SOS-KC-Valmeny/icon.ico"
   },
   {
    "optionDest": "name",
@@ -74,10 +74,6 @@
    "value": false
   },
   {
-   "optionDest": "datas",
-   "value": "C:/Users/d4vv/PycharmProjects/s\u00f6skc profiler/icon.ico;."
-  },
-  {
    "optionDest": "hiddenimports",
    "value": "selenium"
   },
@@ -92,6 +88,10 @@
   {
    "optionDest": "datas",
    "value": "C:/Users/d4vv/AppData/Local/Programs/Python/Python310/Lib/site-packages/customtkinter;customtkinter/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/d4vv/PycharmProjects/SOS-KC-Valmeny/icon.ico;."
   }
  ],
  "nonPyinstallerOptions": {

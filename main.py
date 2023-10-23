@@ -24,7 +24,7 @@ import os
 # Skapad av Mattias Pettersson @ Serviceförvaltningen #
 #######################################################
 
-prod = False
+prod = True
 log_string = ""
 first_name = ""
 last_name = ""
@@ -221,12 +221,13 @@ def schedule_check(t, run_button, loading_message, case_number_entry, hsa_id_ent
     one second.
     """
     global root
-    root.after(1000, check_if_done, t, run_button, loading_message, case_number_entry, hsa_id_entry)
+    root.after(500, check_if_done, t, run_button, loading_message, case_number_entry, hsa_id_entry)
 
 
 def check_if_done(t, run_button, loading_message, case_number_entry, hsa_id_entry):
     global times_checked_if_done
     # If the thread has finished, re-enable the button.
+
     if not t.is_alive():
         run_button.configure(state="normal", bg_color="green")
         loading_message.grid_forget()
@@ -420,7 +421,7 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
         else:
             hover_cell = i.find_element(By.XPATH, ".//td[2]")
             action.move_to_element(hover_cell).perform()
-            sleep(0.3)
+            sleep(0.4)
 
             ek_workplace = driver.find_element(
                 By.XPATH, "//*[@id='dijit__MasterTooltip_0']/div[1]").text  
@@ -1333,7 +1334,7 @@ def create_close_mail(user_titel, hsa_id_input, case_number):
             mailitem.Subject = f"Order {case_number} klar"
             mailitem.BodyFormat = 1
             mailitem.SentOnBehalfOfName = "kontocentralen.sf@regionstockholm.se"
-            mailitem.Body = "Hej,\n" +\
+            mailitem.Body = "Hej,\n\n" +\
                             f"Standardprofil {titel} är klar för {first_name} {last_name} ({hsa_id_input}).\n\n" +\
                             "Med vänliga hälsningar \n\n" +\
                             "SÖS Kontocentral \n" +\

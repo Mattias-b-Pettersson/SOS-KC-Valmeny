@@ -24,7 +24,7 @@ import os
 # Skapad av Mattias Pettersson @ Serviceförvaltningen #
 #######################################################
 
-prod = True
+prod = False
 log_string = ""
 first_name = ""
 last_name = ""
@@ -123,7 +123,7 @@ def get_input():
             "Ortopedin",
             "Urologin",
             "Sachsska Barnsjukhuset",
-            "Onkologin",
+            "Onkologiska kliniken",
             "Ögon",
             "Handkirurgin",
             "Kvinnosjukvård och förlossning",
@@ -279,7 +279,7 @@ def handle_input(workplace_input, user_titel, hsa_id_input, new_ids_account, cas
         "Ortopedin": "ort",
         "Urologin": "uro",
         "Sachsska Barnsjukhuset": "sac",
-        "Onkologin": "onk",
+        "Onkologiska kliniken": "onk",
         "Ögon": "ögon",
         "Infektionskliniken-Venhälsan": "inf",
         "Handkirurgin": "hki",
@@ -302,7 +302,7 @@ def handle_input(workplace_input, user_titel, hsa_id_input, new_ids_account, cas
         "uro": "Urologiska kliniken, Specialistvård, Södersjukhuset AB",
         "sac": "Sachsska barn- och ungdomssjukhuset, Södersjukhuset AB",
         "kvi": "Kvinnosjukvård och förlossning, Södersjukhuset AB",
-        "onk": "Onkologkliniken, Specialistvård, Södersjukhuset AB",
+        "onk": "Onkologiska kliniken, Specialistvård, Södersjukhuset AB",
         "ögon": "Ögonklinik, Specialistvård, Södersjukhuset AB",
         "inf": "Infektionskliniken-Venhälsan, Specialistvård, Södersjukhuset AB",
         "hki": "Handkirurgi, Specialistvård, Södersjukhuset AB",
@@ -784,6 +784,8 @@ def add_vmu(hsa, hsa_id_input):
 
     driver.set_window_size(1920, 1080)
 
+    sleep(0.1)
+    
     # Klickar på "Lägg till"
     WebDriverWait(driver, 10).until(
         ec.presence_of_element_located((By.ID, "dijit_form_Button_2"))
@@ -1057,7 +1059,7 @@ def add_lifecare(user_titel, hsa_id_input, workplace_input, kk_workplace):
             "int": "Internmedicin",
             "kar": "Kardiologi",
             "kir": "Kirurgi",
-            "onk": "Onkologkliniken",
+            "onk": "Onkologiska kliniken",
             "ort": "Ortopedkliniken",
             "uro": "Urologiska kliniken",
             "kk": "Kvinnosjukvård och förlossning",

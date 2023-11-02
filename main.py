@@ -470,7 +470,7 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
 
         for x in available_personposts_not_in_vo:
             continue_with_personpost_not_in_vo = messagebox.askyesno(
-                f"Hittade ingen personpost som matchar", f"Hittade ingen personpost som matchar. Vill du fortsätta med personposten på följande plats: {x}?"
+                f"Hittade ingen personpost som matchar", f"Hittade ingen personpost som matchar. Vill du fortsätta med personposten på plats {x} i EK? Räknat uppefrån och ner i listan på personposter användaren har."
             )
             if continue_with_personpost_not_in_vo:
                 chosen_personposts_not_in_vo = x

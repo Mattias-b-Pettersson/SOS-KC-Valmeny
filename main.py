@@ -24,7 +24,7 @@ import os
 # Skapad av Mattias Pettersson @ Serviceförvaltningen #
 #######################################################
 
-prod = False
+prod = True
 log_string = ""
 first_name = ""
 last_name = ""
@@ -393,6 +393,7 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
     global last_name
     global log_string
     global prod
+    global chosen_personposts_not_in_vo
 
     kk_workplace = ""
     search_hsa_id(hsa_id_input)
@@ -414,6 +415,10 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
     
     personpost_position = 0
     available_personposts = 0
+
+    # {"VO, BLA BLA BLA, Södersjukhuset AB": plats där personposten ligger}
+    available_personposts_not_in_vo = []
+
     for index, i in enumerate(dojo_grid_row):
         # Hoppar över första loopen för det är raden för namnen på varje spalt, ex "status", "e-post"
         if index == 0:
@@ -440,7 +445,9 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
                         kk_workplace = "obst"
                         print("Användaren jobbar på KK Obstetriken")
                         root.after(10, print_text_in_text_box, "Användaren jobbar på KK Obstetriken")
-
+            
+            if "Södersjukhuset AB" in ek_workplace:
+                available_personposts_not_in_vo.append(index)
 
     if available_personposts > 1:
         log_string += f"- Finns 2 matchningar i EK för {hsa_id_input} \n"
@@ -448,13 +455,6 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
         root.after(10, print_text_in_text_box, f"{hsa_id_input} har 2 personposter under valt VO. dubbelkolla manuellt. \n")
         raise MoreThanOneAvailablePersonpost
     
-    elif available_personposts == 0:
-        log_string += f"- Ingen användare hittades som matchar HSA-ID och arbetsplats. \n"
-        print(
-            "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
-        root.after(10, print_text_in_text_box, "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
-
-        raise NoUserFoundException
     elif available_personposts == 1:
         action.context_click(
             dojo_grid_row[personpost_position]).perform()
@@ -464,7 +464,42 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
                 By.XPATH, "//td[text()='Redigera']"
             ))
         ).click()
-    
+
+    elif len(available_personposts_not_in_vo) != 0:
+        chosen_personposts_not_in_vo = 0
+
+        for x in available_personposts_not_in_vo:
+            continue_with_personpost_not_in_vo = messagebox.askyesno(
+                f"Hittade ingen personpost som matchar", f"Hittade ingen personpost som matchar. Vill du fortsätta med personposten på följande plats: {x}?"
+            )
+            if continue_with_personpost_not_in_vo:
+                chosen_personposts_not_in_vo = x
+
+                action.context_click(
+                    dojo_grid_row[chosen_personposts_not_in_vo]).perform()
+                sleep(0.4)
+                WebDriverWait(driver, 10).until(
+                    ec.presence_of_element_located((
+                        By.XPATH, "//td[text()='Redigera']"
+                    ))
+                ).click()
+        
+        if chosen_personposts_not_in_vo == 0:
+            log_string += f"- Ingen användare hittades som matchar HSA-ID och arbetsplats. \n"
+            print(
+                "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
+            root.after(10, print_text_in_text_box, "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
+
+            raise NoUserFoundException
+
+    elif available_personposts == 0 and len(available_personposts_not_in_vo) == 0:
+        log_string += f"- Ingen användare hittades som matchar HSA-ID och arbetsplats. \n"
+        print(
+            "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
+        root.after(10, print_text_in_text_box, "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
+
+        raise NoUserFoundException
+
     else:
         print("Något gick fel när personposten skulle öppnas.")
         root.after(10, print_text_in_text_box, "Något gick fel när personposten skulle öppnas.")
@@ -590,6 +625,7 @@ def add_groupcode(hsa_id_input, user_titel, workplace):
     global kk_obstetriken_enheter
     global kk_gynekologen_enheter
     global log_string
+    global chosen_personposts_not_in_vo
 
     if user_titel == "lak" or user_titel == "at_lak":
         print("\nKollar förskrivarkod")
@@ -599,53 +635,66 @@ def add_groupcode(hsa_id_input, user_titel, workplace):
 
         dojo_grid_row = driver.find_elements(
             By.CLASS_NAME, "dojoxGridRowTable")
-
-        # Går igenom sök resultaten och kollar om arbetsplatsen matchar med det som man har gett som input
-        # Går sedan in på den som matchar
-        personpost_position = 0
-        available_personposts = 0
-        for index, i in enumerate(dojo_grid_row):
-            # Hoppar över första loopen för det är raden för namnen på varje spalt, ex "status", "e-post"
-            if index == 0:
-                pass
-            else:
-                hover_cell = i.find_element(By.XPATH, ".//td[2]")
-                action.move_to_element(hover_cell).perform()
-
-
-                ek_workplace = driver.find_element(
-                    By.XPATH, "//*[@id='dijit__MasterTooltip_0']/div[1]").text  
-                
-                
-                if workplace in ek_workplace:
-                    personpost_position = index
-                    available_personposts += 1
-
-        if available_personposts > 1:
-            handle_of_the_window_before_minimizing = driver.current_window_handle
-            driver.minimize_window
-            write_log(log_string)
-            raise MoreThanOneAvailablePersonpost
-        elif available_personposts == 0:
-            log_string += f"- Ingen användare hittades som matchar HSA-ID och arbetsplats. \n"
-            print(
-                "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
-            root.after(10, print_text_in_text_box, "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
-            raise NoUserFoundException
-        elif available_personposts == 1:
+        
+        # Om man godkännt att köra på en personpost utanför valt VO så kör den på det. Exempelvis externbemanning.
+        if chosen_personposts_not_in_vo != 0:
             action.context_click(
-                dojo_grid_row[personpost_position]).perform()
+                dojo_grid_row[chosen_personposts_not_in_vo]).perform()
             sleep(0.4)
             WebDriverWait(driver, 10).until(
                 ec.presence_of_element_located((
                     By.XPATH, "//td[text()='Redigera']"
                 ))
             ).click()
-        
-        else:
-            print("Något gick fel när personposten skulle öppnas.")
-            root.after(10, print_text_in_text_box, "Något gick fel när personposten skulle öppnas.")
-            raise NoUserFoundException
+
+        else: 
+            # Går igenom sök resultaten och kollar om arbetsplatsen matchar med det som man har gett som input
+            # Går sedan in på den som matchar
+            personpost_position = 0
+            available_personposts = 0
+            
+            for index, i in enumerate(dojo_grid_row):
+                # Hoppar över första loopen för det är raden för namnen på varje spalt, ex "status", "e-post"
+                if index == 0:
+                    pass
+                else:
+                    hover_cell = i.find_element(By.XPATH, ".//td[2]")
+                    action.move_to_element(hover_cell).perform()
+
+
+                    ek_workplace = driver.find_element(
+                        By.XPATH, "//*[@id='dijit__MasterTooltip_0']/div[1]").text  
+                    
+                    
+                    if workplace in ek_workplace:
+                        personpost_position = index
+                        available_personposts += 1
+
+            if available_personposts > 1:
+                handle_of_the_window_before_minimizing = driver.current_window_handle
+                driver.minimize_window
+                write_log(log_string)
+                raise MoreThanOneAvailablePersonpost
+            elif available_personposts == 0:
+                log_string += f"- Ingen användare hittades som matchar HSA-ID och arbetsplats. \n"
+                print(
+                    "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
+                root.after(10, print_text_in_text_box, "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
+                raise NoUserFoundException
+            elif available_personposts == 1:
+                action.context_click(
+                    dojo_grid_row[personpost_position]).perform()
+                sleep(0.4)
+                WebDriverWait(driver, 10).until(
+                    ec.presence_of_element_located((
+                        By.XPATH, "//td[text()='Redigera']"
+                    ))
+                ).click()
+            
+            else:
+                print("Något gick fel när personposten skulle öppnas.")
+                root.after(10, print_text_in_text_box, "Något gick fel när personposten skulle öppnas.")
+                raise NoUserFoundException
 
         # Byt fokus till nya fönstret
         try:
@@ -1180,6 +1229,8 @@ def add_lifecare(user_titel, hsa_id_input, workplace_input, kk_workplace):
                         By.XPATH, '//button/span[text()="Spara"]/..'
                     ))
                 ).click()
+
+                sleep(1)
 
                 add_lifecare_mu(all_units, workplace_input)
 

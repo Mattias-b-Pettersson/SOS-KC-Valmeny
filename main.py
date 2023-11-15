@@ -11,10 +11,9 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from subprocess import CREATE_NO_WINDOW
 from time import sleep
 from datetime import datetime
-from tkinter import messagebox, Scrollbar, VERTICAL
+from tkinter import messagebox, VERTICAL
 from pythoncom import CoInitialize, CoUninitialize
 from sys import exit
-import random
 import win32com.client as win32
 import threading
 import customtkinter
@@ -393,9 +392,11 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
     global last_name
     global log_string
     global prod
-    global chosen_personposts_not_in_vo
+    global chosen_personpost
 
+    chosen_personpost = None
     kk_workplace = ""
+
     search_hsa_id(hsa_id_input)
     print("\nLägger till rörpost..")
     root.after(10, print_text_in_text_box, "Lägger till rörpost..")
@@ -413,7 +414,7 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
     # Går igenom sök resultaten och kollar om arbetsplatsen matchar med det som man har gett som input
     # Går sedan in på den som matchar
     
-    personpost_position = 0
+    personpost_positions = []
     available_personposts = 0
 
     # {"VO, BLA BLA BLA, Södersjukhuset AB": plats där personposten ligger}
@@ -432,7 +433,7 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
                 By.XPATH, "//*[@id='dijit__MasterTooltip_0']/div[1]").text  
             
             if workplace in ek_workplace:
-                personpost_position = index
+                personpost_positions.append(index)
                 available_personposts += 1
 
                 if workplace_input == "kk":
@@ -446,18 +447,13 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
                         print("Användaren jobbar på KK Obstetriken")
                         root.after(10, print_text_in_text_box, "Användaren jobbar på KK Obstetriken")
             
-            if "Södersjukhuset AB" in ek_workplace:
+            elif "Södersjukhuset AB" in ek_workplace:
+                # Här sparas de personposter som är utanför VO för att sedan loopas igenom och kolla om man vill fortsätta med den 
                 available_personposts_not_in_vo.append(index)
 
-    if available_personposts > 1:
-        log_string += f"- Finns 2 matchningar i EK för {hsa_id_input} \n"
-        print(f"{hsa_id_input} har 2 personposter under valt VO. dubbelkolla manuellt. \n")
-        root.after(10, print_text_in_text_box, f"{hsa_id_input} har 2 personposter under valt VO. dubbelkolla manuellt. \n")
-        raise MoreThanOneAvailablePersonpost
-    
-    elif available_personposts == 1:
+    if available_personposts == 1:
         action.context_click(
-            dojo_grid_row[personpost_position]).perform()
+            dojo_grid_row[personpost_positions[0]]).perform()
         sleep(0.4)
         WebDriverWait(driver, 10).until(
             ec.presence_of_element_located((
@@ -465,26 +461,48 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
             ))
         ).click()
 
-    elif len(available_personposts_not_in_vo) != 0:
-        chosen_personposts_not_in_vo = 0
+    # Kollar vilken personpost man vill fortsätta med. Ifall det är 2 personposter på samma VO eller under någon annan enhet på SÖS.
+    elif len(available_personposts_not_in_vo) != 0 or available_personposts > 1:
+        # Om man väljer att fortsätta med personpost utanför VO, sparas positionen på personposten i chosen_personposts_not_in_vo
+        chosen_personpost = 0
 
         for x in available_personposts_not_in_vo:
-            continue_with_personpost_not_in_vo = messagebox.askyesno(
+            continue_with_personpost = messagebox.askyesno(
                 f"Hittade ingen personpost som matchar", f"Hittade ingen personpost som matchar. Vill du fortsätta med personposten på plats {x} i EK? Räknat uppefrån och ner i listan på personposter användaren har."
             )
-            if continue_with_personpost_not_in_vo:
-                chosen_personposts_not_in_vo = x
+            if continue_with_personpost:
+                chosen_personpost = x
 
                 action.context_click(
-                    dojo_grid_row[chosen_personposts_not_in_vo]).perform()
+                    dojo_grid_row[chosen_personpost]).perform()
                 sleep(0.4)
                 WebDriverWait(driver, 10).until(
                     ec.presence_of_element_located((
                         By.XPATH, "//td[text()='Redigera']"
                     ))
                 ).click()
+
+                break
+        else:
+            for x in personpost_positions:
+                continue_with_personpost = messagebox.askyesno(
+                    f"Har flera personposter på samma VO ", f"Användaren har flera personposter på samma VO. Vill du fortsätta med personposten på plats {x} i EK? Räknat uppefrån och ner i listan på personposter användaren har."
+                )
+                if continue_with_personpost:
+                    chosen_personpost = x
+
+                    action.context_click(
+                        dojo_grid_row[chosen_personpost]).perform()
+                    sleep(0.4)
+                    WebDriverWait(driver, 10).until(
+                        ec.presence_of_element_located((
+                            By.XPATH, "//td[text()='Redigera']"
+                        ))
+                    ).click()
+
+                    break
         
-        if chosen_personposts_not_in_vo == 0:
+        if chosen_personpost == 0:
             log_string += f"- Ingen användare hittades som matchar HSA-ID och arbetsplats. \n"
             print(
                 "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
@@ -618,14 +636,13 @@ def add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input):
         driver.close()
         driver.switch_to.window(window_before)
 
-    return kk_workplace
+    return kk_workplace, chosen_personpost
 
 
-def add_groupcode(hsa_id_input, user_titel, workplace):
+def add_groupcode(hsa_id_input, user_titel, workplace, chosen_personpost):
     global kk_obstetriken_enheter
     global kk_gynekologen_enheter
     global log_string
-    global chosen_personposts_not_in_vo
 
     if user_titel == "lak" or user_titel == "at_lak":
         print("\nKollar förskrivarkod")
@@ -637,9 +654,9 @@ def add_groupcode(hsa_id_input, user_titel, workplace):
             By.CLASS_NAME, "dojoxGridRowTable")
         
         # Om man godkännt att köra på en personpost utanför valt VO så kör den på det. Exempelvis externbemanning.
-        if chosen_personposts_not_in_vo != 0:
+        if chosen_personpost != None:
             action.context_click(
-                dojo_grid_row[chosen_personposts_not_in_vo]).perform()
+                dojo_grid_row[chosen_personpost]).perform()
             sleep(0.4)
             WebDriverWait(driver, 10).until(
                 ec.presence_of_element_located((
@@ -1457,10 +1474,10 @@ def add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, use
         except NameError:
             pass
         # För rörpost
-        kk_workplace = add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input)
+        kk_workplace, chosen_personpost = add_pipemail_role(workplace, workplace_input, user_titel, hsa_id_input)
 
         # Förskrivarkod
-        add_groupcode(hsa_id_input, user_titel, workplace)
+        add_groupcode(hsa_id_input, user_titel, workplace, chosen_personpost)
 
         # För Pascal
         add_pascal(user_titel, hsa_id_input,

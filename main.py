@@ -334,6 +334,9 @@ def handle_input(workplace_input, user_titel, hsa_id_input, new_ids_account, cas
 
     global handle_of_the_window_before_minimizing
 
+    user_titel_full = ""
+    user_titel_full += user_titel
+
     if user_titel == "Läkare":
         user_titel = "lak"
     elif user_titel == "AT-Läkare":
@@ -421,7 +424,7 @@ def handle_input(workplace_input, user_titel, hsa_id_input, new_ids_account, cas
 
     vard_och_behandling_vmu_hsa = all_units_vmu[workplace_input]
 
-    run(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, hsa_id_input, new_ids_account, case_number)
+    run(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, user_titel_full, hsa_id_input, new_ids_account, case_number)
 
 
 def open_browser():
@@ -1294,7 +1297,7 @@ def add_lifecare_mu(all_units, workplace_input):
             log_string += "- Något gick fel i skapandet av LifeCare kontot."
 
 
-def send_ids_mail(user_titel, hsa_id_input, new_ids_account):
+def send_ids_mail(user_titel_full, hsa_id_input, new_ids_account):
     """
     Skickar mail för nytt konto till IDS7(Ris och Pacs).\n 
     Funktionen är beroende av att förnamn och efternamn tas när rörpost läggs till i EK.
@@ -1305,26 +1308,11 @@ def send_ids_mail(user_titel, hsa_id_input, new_ids_account):
     global prod
 
     if new_ids_account:
-        if user_titel == "lak":
-            titel = "Läkare"
-        elif user_titel == "at_lak":
-            titel = "AT-Läkare"
-        elif user_titel == "ssk":
-            titel = "Sjuksköterska"
-        elif user_titel == "usk":
-            titel = "Undersköterska"
-        elif user_titel == "paramed":
-            titel = "Paramedicinerare"
-        elif user_titel == "stud_paramed":
-            titel = "Student paramedicinerare"
-        elif user_titel == "stud_ssk":
-            titel = "Student sjuksköterska"
-        
+               
         root.after(10, print_text_in_text_box, "\nSkapar ett mail för ids7")
 
         outlook_app = win32.Dispatch("Outlook.Application", CoInitialize())
         outlook_NS = outlook_app.GetNameSpace("MAPI")
-        
 
         mailitem = outlook_app.CreateItem(0)
         mailitem.Subject = "Ny användare"
@@ -1332,7 +1320,7 @@ def send_ids_mail(user_titel, hsa_id_input, new_ids_account):
         mailitem.To = "bild-itbestallning.sodersjukhuset@regionstockholm.se"
         mailitem.SentOnBehalfOfName = "kontocentralen.sf@regionstockholm.se"
         mailitem.Body = "Hej,\n" +\
-                        f"Ny användare, {first_name} {last_name} ({hsa_id_input.lower()}) ({titel}).\n\n" +\
+                        f"Ny användare, {first_name} {last_name} ({hsa_id_input.lower()}) ({user_titel_full}).\n\n" +\
                         "Med vänliga hälsningar \n\n" +\
                         "SÖS Kontocentral \n" +\
                         "Region Stockholm \n" +\
@@ -1340,38 +1328,19 @@ def send_ids_mail(user_titel, hsa_id_input, new_ids_account):
                         "E-post: kontocentralen.sf@regionstockholm.se"
         if prod:
             mailitem.Send()
-            root.after(10, print_text_in_text_box, "IDS7 mail skickat")
+            root.after(0, print_text_in_text_box, "IDS7 mail skickat")
             log_string += "- Mail för IDS7 skickat"
         elif not prod:
             mailitem.Display()
-            root.after(10, print_text_in_text_box, "IDS7 mail inte skickat, inte i prod")
+            root.after(0, print_text_in_text_box, "IDS7 mail inte skickat, inte i prod")
             log_string += "- Mail för IDS7 inte skickat, inte prod"
 
         CoUninitialize()
 
-def create_close_mail(user_titel, hsa_id_input, case_number, new_or_remove, titel=""):
+def create_close_mail(user_titel_full, hsa_id_input, case_number, new_or_remove, titel=""):
         
         global first_name
         global last_name
-
-        if user_titel == "lak":
-            titel = "Läkare"
-        elif user_titel == "at_lak":
-            titel = "AT-Läkare"
-        elif user_titel == "ssk":
-            titel = "Sjuksköterska"
-        elif user_titel == "usk":
-            titel = "Undersköterska"
-        elif user_titel == "paramed":
-            titel = "Paramedicinerare"
-        elif user_titel == "barnmorsk":
-            titel = "Barnmorska"
-        elif user_titel == "läksek":
-            titel = "Läkarsekreterare"
-        elif user_titel == "stud_paramed":
-            titel = "Student paramedicinerare"
-        elif user_titel == "stud_ssk":
-            titel = "Student sjuksköterska"
         
         if case_number:
             outlook_app = win32.Dispatch("Outlook.Application", CoInitialize())
@@ -1385,7 +1354,7 @@ def create_close_mail(user_titel, hsa_id_input, case_number, new_or_remove, tite
 
             if new_or_remove == "new":
                 mailitem.Body = "Hej,\n\n" +\
-                            f"Standardprofil {titel if titel else ''} är klar för {first_name if first_name else ''} {last_name if last_name else ''} ({hsa_id_input}).\n\n" +\
+                            f"Standardprofil {user_titel_full if user_titel_full else ''} är klar för {first_name if first_name else ''} {last_name if last_name else ''} ({hsa_id_input}).\n\n" +\
                             "Med vänliga hälsningar \n\n" +\
                             "SÖS Kontocentral \n" +\
                             "Region Stockholm \n" +\
@@ -1444,7 +1413,7 @@ def write_log(log_text):
     log_string = ""
 
 
-def add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, hsa_id_input, new_ids_account, case_number):
+def add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, user_titel_full, hsa_id_input, new_ids_account, case_number):
     """
     Lägger till alla behörigheter
     """
@@ -1496,7 +1465,7 @@ def add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, use
             add_lifecare(user_titel, hsa_id_input, workplace_input, kk_workplace)
 
             # Skickar mail för konto i ids7 / Ris & Pacs
-            send_ids_mail(user_titel, hsa_id_input, new_ids_account)
+            send_ids_mail(user_titel, user_titel_full, hsa_id_input, new_ids_account)
 
             # Skapar upp mall för lösningsmailet
             create_close_mail(user_titel, hsa_id_input, case_number, "new")
@@ -1512,7 +1481,7 @@ def add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, use
         times_run = 0
         add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, hsa_id_input, new_ids_account, case_number)
 
-def run(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, hsa_id_input, new_ids_account, case_number):
+def run(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, user_titel_full, hsa_id_input, new_ids_account, case_number):
 
     global log_string
     global first_name
@@ -1525,7 +1494,7 @@ def run(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, hsa
     log_string += f'{datetime.now().strftime("%Y-%m-%d, %H:%M")} - {os.getlogin().upper()} Lägger till behörigheter på HSA-ID {hsa_id_input} under {workplace}\n'
 
     try:
-        add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, hsa_id_input, new_ids_account, case_number)
+        add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, user_titel_full, hsa_id_input, new_ids_account, case_number)
     except NoUserFoundException:
         handle_of_the_window_before_minimizing = driver.current_window_handle
         driver.minimize_window

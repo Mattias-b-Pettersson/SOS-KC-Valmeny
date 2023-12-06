@@ -11,7 +11,7 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from subprocess import CREATE_NO_WINDOW
 from time import sleep
 from datetime import datetime
-from tkinter import messagebox, VERTICAL
+from tkinter import messagebox, VERTICAL, ttk
 from pythoncom import CoInitialize, CoUninitialize
 from sys import exit
 import win32com.client as win32
@@ -23,7 +23,7 @@ import os
 # Skapad av Mattias Pettersson @ Serviceförvaltningen #
 #######################################################
 
-prod = False
+prod = True
 log_string = ""
 first_name = ""
 last_name = ""
@@ -66,11 +66,9 @@ def get_input():
 
     root = customtkinter.CTk()
     root.title("SÖS-KC Valmeny")
-    # root.iconbitmap("icon.ico")
     root.resizable(False, False)
 
-    frame = customtkinter.CTkFrame(master=root)
-    frame.grid(row=0, column=0, pady=20, padx=60)
+
 
     created_by = customtkinter.CTkLabel(
         master=root,
@@ -84,18 +82,29 @@ def get_input():
     )
     created_by.grid(row=1, column=0)
 
-    main_label = customtkinter.CTkLabel(master=frame, text="SÖS-KC Valmeny", font=("Roboto", 32))
+    main_label = customtkinter.CTkLabel(master=root, text="SÖS-KC Valmeny", font=("Roboto", 32))
     main_label.grid(row=0, column=0, columnspan=2, pady=(30), padx=60)
 
-    hsa_id_label = customtkinter.CTkLabel(master=frame, text="Ange ett HSA-ID:", font=("Roboto", 14))
-    hsa_id_label.grid(row=1, column=0, pady=0, padx=(30,10))
-    hsa_id_entry = customtkinter.CTkEntry(master=frame, placeholder_text="HSA-ID")
+    style = ttk.Style()
+    style.configure("TNotebook", background="#242424")
+    style.configure("TNotebook.Tab", padding=[10, 5], font=("Helvetica", 12), foreground="black")
+    tabview = customtkinter.CTkTabview(root)
+    tabview.grid(row=1, column=0, pady=(0,20), padx=60)
+
+    
+    
+# -------- Nedan är Tab 1
+    tabview.add("Ny profil")
+    
+    hsa_id_label = customtkinter.CTkLabel(master=tabview.tab("Ny profil"), text="Ange ett HSA-ID:", font=("Roboto", 14))
+    hsa_id_label.grid(row=1, column=0, pady=(10,0), padx=(30,10))
+    hsa_id_entry = customtkinter.CTkEntry(master=tabview.tab("Ny profil"), placeholder_text="HSA-ID")
     hsa_id_entry.grid(row=2, column=0, pady=(0,20), padx=(30,10))
     
-    titel_label = customtkinter.CTkLabel(master=frame, text="Vilken titel har användaren?", font=("Roboto", 14))
+    titel_label = customtkinter.CTkLabel(master=tabview.tab("Ny profil"), text="Vilken titel har användaren?", font=("Roboto", 14))
     titel_label.grid(row=3, column=0,pady=0, padx=(30,10))
     titel_entry = customtkinter.CTkComboBox(
-        master=frame,
+        master=tabview.tab("Ny profil"),
         state="readonly",
         values=[
             "Läkare",
@@ -112,10 +121,10 @@ def get_input():
 
     titel_entry.grid(row=4, column=0, pady=(0,20), padx=(30,10))
 
-    workplace_label = customtkinter.CTkLabel(master=frame, text="Vart jobbar användaren?", font=("Roboto", 14))
+    workplace_label = customtkinter.CTkLabel(master=tabview.tab("Ny profil"), text="Vart jobbar användaren?", font=("Roboto", 14))
     workplace_label.grid(row=5, column=0, pady=0, padx=(30,10))
     workplace_entry = customtkinter.CTkComboBox(
-        master=frame,
+        master=tabview.tab("Ny profil"),
         state="readonly",
         values=[
             "Akuten",
@@ -139,16 +148,16 @@ def get_input():
     )
     workplace_entry.grid(row=6, column=0, pady=0, padx=(30,10))
 
-    ids_entry = customtkinter.CTkSwitch(master=frame, text="Skicka mail för IDS?", onvalue=True, offvalue=False)
+    ids_entry = customtkinter.CTkSwitch(master=tabview.tab("Ny profil"), text="Skicka mail för IDS?", onvalue=True, offvalue=False)
     ids_entry.grid(row=7, column=0, pady=0, padx=(30,10))
 
-    case_number_label = customtkinter.CTkLabel(master=frame, text="Ange ärendenummret:", font=("Roboto", 14))
+    case_number_label = customtkinter.CTkLabel(master=tabview.tab("Ny profil"), text="Ange ärendenummret:", font=("Roboto", 14))
     case_number_label.grid(row=8, column=0, pady=0, padx=(30,10))
-    case_number_entry = customtkinter.CTkEntry(master=frame, placeholder_text="Ärendenummer")
+    case_number_entry = customtkinter.CTkEntry(master=tabview.tab("Ny profil"), placeholder_text="Ärendenummer")
     case_number_entry.grid(row=9, column=0, pady=(0,20), padx=(30,10))
     
     run_button = customtkinter.CTkButton(
-        master=frame, 
+        master=tabview.tab("Ny profil"), 
         text="Lägg på behörigheter", 
         command=lambda: run_button_func(
             workplace_entry.get(),
@@ -162,10 +171,10 @@ def get_input():
             hsa_id_entry,
         )
     )
-    run_button.grid(row=10, column=0, pady=(10,20), padx=(30,10))
+    run_button.grid(row=10, column=0, pady=(0,20), padx=(30,10))
 
     create_newaccount_closemail_button = customtkinter.CTkButton(
-        master=frame, 
+        master=tabview.tab("Ny profil"), 
         text="Skapa standard mail \ntill nytt konto", 
         command=lambda: create_closemail_button_func(
             titel_entry.get(),
@@ -176,30 +185,85 @@ def get_input():
             "new"
         )
     )
-    create_newaccount_closemail_button.grid(row=11, column=0, pady=(10,20), padx=(30,10))
+    create_newaccount_closemail_button.grid(row=11, column=0, pady=(0,20), padx=(30,10))
+
+
+
+# -------- Slut på  Tab 1
+# # -------- Nedan är Tab 2
+    tabview.add("Borttag")
+
+    
+
+    tab_2_hsa_id_label = customtkinter.CTkLabel(master=tabview.tab("Borttag"), text="Ange ett HSA-ID:", font=("Roboto", 14))
+    tab_2_hsa_id_label.grid(row=0, column=0, pady=(10,0), padx=(30,10))
+    tab_2_hsa_id_entry = customtkinter.CTkEntry(master=tabview.tab("Borttag"), placeholder_text="HSA-ID")
+    tab_2_hsa_id_entry.grid(row=1, column=0, pady=(0,20), padx=(30,10))
+    
+    tab_2_titel_label = customtkinter.CTkLabel(master=tabview.tab("Borttag"), text="Vilken titel har användaren?", font=("Roboto", 14))
+    tab_2_titel_label.grid(row=2, column=0,pady=0, padx=(30,10))
+    tab_2_titel_entry = customtkinter.CTkComboBox(
+        master=tabview.tab("Borttag"),
+        state="readonly",
+        values=[
+            "Läkare",
+            "AT-Läkare",
+            "Sjuksköterska",
+            "Undersköterska",
+            "Paramedicinerare",
+            "Barnmorska",
+            "Läkarsekreterare",
+            "Student sjuksköterska",
+            "Student paramedicinerare",
+        ],
+    )
+    tab_2_titel_entry.grid(row=3, column=0, pady=(0,20), padx=(30,10))
+
+    tab_2_case_number_label = customtkinter.CTkLabel(master=tabview.tab("Borttag"), text="Ange ärendenummret:", font=("Roboto", 14))
+    tab_2_case_number_label.grid(row=4, column=0, pady=0, padx=(30,10))
+    tab_2_case_number_entry = customtkinter.CTkEntry(master=tabview.tab("Borttag"), placeholder_text="Ärendenummer")
+    tab_2_case_number_entry.grid(row=5, column=0, pady=(0,20), padx=(30,10))
+
+    run_remove_button = customtkinter.CTkButton(
+        master=tabview.tab("Borttag"), 
+        text="Ta bort behörigheter", 
+        command=lambda: run_remove_button_func(
+            tab_2_titel_entry.get(),
+            tab_2_hsa_id_entry.get(),
+            run_remove_button,
+            loading_message,
+            tab_2_case_number_entry.get(),
+            tab_2_case_number_entry,
+            tab_2_hsa_id_entry,
+        ) 
+    )
+    run_remove_button.grid(row=6, column=0, pady=(0,25), padx=(30,10))
 
     create_removeaccount_closemail_button = customtkinter.CTkButton(
-        master=frame, 
+        master=tabview.tab("Borttag"), 
         text="Skapa standard mail \ntill borttag av konto", 
         command=lambda: create_closemail_button_func(
-            titel_entry.get(),
-            hsa_id_entry.get(),
-            case_number_entry.get(),
-            case_number_entry,
-            hsa_id_entry,
+            tab_2_titel_entry.get(),
+            tab_2_hsa_id_entry.get(),
+            tab_2_case_number_entry.get(),
+            tab_2_case_number_entry,
+            tab_2_hsa_id_entry,
             "remove"
-        )
+        ) 
     )
-    create_removeaccount_closemail_button.grid(row=12, column=0, pady=(10,20), padx=(30,10))
+    create_removeaccount_closemail_button.grid(row=7, column=0, pady=(0,25), padx=(30,10))
 
 
-    text_box = customtkinter.CTkTextbox(master=frame, activate_scrollbars=True, width=800, height=400, font=("Roboto", 18))
-    text_box.grid(row= 1, rowspan=9, column=1, pady=(3,20), padx=(0,30))
+# -------- Slut på Tab 2    
+
+    text_box = customtkinter.CTkTextbox(master=root, activate_scrollbars=True, width=800, height=400, font=("Roboto", 18))
+    text_box.grid(row= 1, rowspan=10, column=1, pady=(20,20), padx=(0,30))
     text_box.configure(state="disabled")
 
-    loading_message = customtkinter.CTkLabel(master=frame, font=("Roboto", 14), text="", width=600)
+    loading_message = customtkinter.CTkLabel(master=root, font=("Roboto", 14), text="", width=600)
 
     root.protocol("WM_DELETE_WINDOW", on_closing)
+    # notebook.select(frame_tab1)
     root.mainloop()
 
 def create_closemail_button_func(user_titel, hsa_id_input, case_number, case_number_entry, hsa_id_entry, new_or_remove):
@@ -215,9 +279,9 @@ def create_closemail_button_func(user_titel, hsa_id_input, case_number, case_num
 
     # Skapar upp mailet med funktionen nedan
     if new_or_remove == "new":
-        create_close_mail(user_titel, hsa_id_input, case_number, "new", titel="")
+        create_close_mail(user_titel, hsa_id_input, case_number, "new")
     elif new_or_remove == "remove":
-        create_close_mail(user_titel, hsa_id_input, case_number, "remove", titel="")
+        create_close_mail(user_titel, hsa_id_input, case_number, "remove")
     else:
         print("\nNågot gick fel... försök igen")
         root.after(0, print_text_in_text_box, f"\nNågot gick fel... försök igen")
@@ -230,42 +294,85 @@ def create_closemail_button_func(user_titel, hsa_id_input, case_number, case_num
     print("\nKlart. Väntar på ny input...")
     root.after(0, print_text_in_text_box, f"\n{hsa_id_input} Klar")
     root.after(0, print_text_in_text_box, "-"*90 + "\n")
-    
 
-def run_button_func(workplace_input, user_titel, hsa_id_input, new_ids_account, run_button, loading_message, case_number, case_number_entry, hsa_id_entry):
+def check_input(hsa_id_input, user_titel, workplace_input, case_number, new_ids_account):
     """
-    funktionen som knappen 'Lägg på behörigheter'/run knappen använder sig av. 
-    Den kontrollerar så att inputten är korrekt angiven och sedan skickar vidare informationen till 'Handle input'
+    Dubbelkollar inputten som knapparna använder sig av.
     """
+    continue_running = True
     hsa_id_input = hsa_id_input.upper().replace(" ", "")
+
+    user_titel_full = ""
+    user_titel_full += user_titel
+
+    if user_titel == "Läkare":
+        user_titel = "lak"
+    elif user_titel == "AT-Läkare":
+        user_titel = "at_lak"
+    elif user_titel == "Sjuksköterska":
+        user_titel = "ssk"
+    elif user_titel == "Undersköterska":
+        user_titel = "usk"
+    elif user_titel == "Paramedicinerare":
+        user_titel = "paramed"
+    elif user_titel == "Barnmorska":
+        user_titel = "barnmorsk"
+    elif user_titel == "Läkarsekreterare":
+        user_titel = "läksek"
+    elif user_titel == "Student paramedicinerare":
+        user_titel = "stud_paramed"
+    elif user_titel == "Student sjuksköterska":
+        user_titel = "stud_ssk"
 
     if len(hsa_id_input) != 4:
         messagebox.showerror("SÖS-KC Valmeny error", "HSA-ID inte 4 karaktärer långt. Gör om gör rätt")
-        return
+        continue_running = False
     
     if user_titel == "":
         messagebox.showerror("SÖS-KC Valmeny error", "Ingen titel vald. Gör om gör rätt")
-        return
+        continue_running = False
     
     if workplace_input == "":
         messagebox.showerror("SÖS-KC Valmeny error", "Inget VO valt. Gör om gör rätt")
-        return
+        continue_running = False
     
     if case_number == "":
         make_sure_no_case_number = messagebox.askyesno("Är du säker?", "Är du säker på att du inte vill skapa ett lösningsmail?\n"
                                                        "Ärendenummer inte ifyllt")
         if make_sure_no_case_number:
             root.after(10, print_text_in_text_box, "Skippar att skapa ett lösningsmail")
+        elif not make_sure_no_case_number:
+            continue_running = False
         else:
-            return
+            pass
 
     if not new_ids_account:
         if not workplace_input == "Obstetriken" and not user_titel == "Barnmorska":
             make_sure_ids = messagebox.askyesno("Är du säker?", "Är du säker på att du inte vill skicka ett mail för IDS?")
             if not make_sure_ids:
-                return
+                continue_running = False
             elif make_sure_ids:
                 root.after(10, print_text_in_text_box, "Skippar att skicka IDS mail...")
+    
+    if not continue_running: 
+        return False, hsa_id_input, user_titel, user_titel_full
+    elif continue_running:
+        return True, hsa_id_input, user_titel, user_titel_full
+
+def run_button_func(workplace_input, user_titel, hsa_id_input, new_ids_account, run_button, loading_message, case_number, case_number_entry, hsa_id_entry):
+    """
+    funktionen som knappen 'Lägg på behörigheter'/run knappen använder sig av. 
+    Den kontrollerar så att inputten är korrekt angiven och sedan skickar vidare informationen till 'Handle input'
+    """
+    continue_running, hsa_id_input, user_titel, user_titel_full = check_input(hsa_id_input, user_titel, workplace_input, case_number, new_ids_account)
+
+    if continue_running:
+        pass
+    elif not continue_running:
+        return
+    else: 
+        root.after(10, print_text_in_text_box, "Något gick fel! Felanmäl detta! Felmeddelande: \nKunde inte kontrollera input.")
+    
 
     if workplace_input == "Obstetriken" and user_titel == "Barnmorska":
         new_ids_account = False
@@ -273,9 +380,35 @@ def run_button_func(workplace_input, user_titel, hsa_id_input, new_ids_account, 
     run_button.configure(state="disabled", bg_color="grey")
 
     loading_message.configure(text="Jobbar på behörigheterna...")
-    loading_message.grid(row= 10, column=1, pady=(0,20), padx=30)
+    loading_message.grid(row= 12, column=1, pady=(0,20), padx=30)
 
-    t = threading.Thread(target=handle_input, args=(workplace_input, user_titel, hsa_id_input, new_ids_account, case_number))
+    workplace, vard_och_behandling_vmu_hsa, user_titel_full, user_titel = handle_input(workplace_input, user_titel, hsa_id_input, new_ids_account, case_number)
+
+    t = threading.Thread(target=run, args=(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, user_titel_full, hsa_id_input, new_ids_account, case_number))
+    t.start()
+    schedule_check(t, run_button, loading_message, case_number_entry, hsa_id_entry)
+
+def run_remove_button_func(user_titel, hsa_id_input, run_button, loading_message, case_number, case_number_entry, hsa_id_entry):
+    """
+    funktionen som knappen 'ta bort behörigheter'knappen använder sig av. 
+    Den kontrollerar så att inputten är korrekt angiven och sedan skickar vidare informationen till 'Handle input'
+    """
+    continue_running, hsa_id_input, user_titel, user_titel_full = check_input(hsa_id_input, user_titel, "no_new_workplace_input", case_number, "no_new_ids_account")
+
+    if continue_running == True:
+        pass
+    elif not continue_running:
+        return
+    else: 
+        root.after(10, print_text_in_text_box, "Något gick fel! Felanmäl detta! Felmeddelande: \nKunde inte kontrollera input.")
+
+
+    run_button.configure(state="disabled", bg_color="grey")
+
+    loading_message.configure(text="Jobbar på borttagen...")
+    loading_message.grid(row= 12, column=1, pady=(0,20), padx=30)
+
+    t = threading.Thread(target=run_remove, args=(user_titel, user_titel_full, hsa_id_input, case_number))
     t.start()
     schedule_check(t, run_button, loading_message, case_number_entry, hsa_id_entry)
 
@@ -424,8 +557,7 @@ def handle_input(workplace_input, user_titel, hsa_id_input, new_ids_account, cas
 
     vard_och_behandling_vmu_hsa = all_units_vmu[workplace_input]
 
-    run(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, user_titel_full, hsa_id_input, new_ids_account, case_number)
-
+    return workplace, vard_och_behandling_vmu_hsa, user_titel_full, user_titel
 
 def open_browser():
     """
@@ -457,17 +589,16 @@ def search_hsa_id(hsa):
 
     url_ek = "https://www.ek.sll.se/ekadmin/NEIDMgmt"
     # Går in i EK
+
     try:
         driver.get(url_ek)
     except TimeoutException:
         log_string += "- Något gick fel vid öppnandet av EK. Inget gjordes. \n"
 
     # Klickar på sök knappen
-    search_button = WebDriverWait(driver, 20).until(
+    WebDriverWait(driver, 20).until(
         ec.presence_of_element_located((By.LINK_TEXT, "Sök"))
-    )
-
-    search_button.click()
+    ).click()
 
     # Skriver in HSA-IDt som har angets som input till funktionen och klickar enter för att söka
     hsaid_input = WebDriverWait(driver, 7).until(
@@ -477,8 +608,20 @@ def search_hsa_id(hsa):
     hsaid_input.send_keys(Keys.RETURN)
     sleep(1)
 
+def change_menyval(menyval):
+    # Klicka på Menyval i redigera fönstret
+    WebDriverWait(driver, 10).until(
+        ec.presence_of_element_located((By.ID, "dijit_MenuBar_0"))
+    ).click()
 
-def open_personpost(workplace, workplace_input, user_titel, hsa_id_input, close_redigera_window_after_funk, personpost_position=None):
+    # Går till "Person" i menyvalet
+    WebDriverWait(driver, 10).until(
+        ec.presence_of_element_located((By.XPATH, f"//td[text()='{menyval}']/.."))
+    ).click()
+
+    sleep(0.2)
+
+def open_personpost(workplace, workplace_input, hsa_id_input, close_redigera_window_after_funk, personpost_position=None):
     """
     Öppnar personposten och tar fram förnam och efternamn på användaren.
 
@@ -568,19 +711,16 @@ def open_personpost(workplace, workplace_input, user_titel, hsa_id_input, close_
 
                     if continue_with_personpost:
                         personpost_position = x
-
                         break
             
             if  not personpost_position:
                 log_string += f"- Ingen användare hittades som matchar HSA-ID och arbetsplats. \n"
                 root.after(10, print_text_in_text_box, "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
-
                 raise NoUserFoundException
 
         elif len(personpost_positions) == 0 and len(available_personposts_not_in_vo) == 0:
             log_string += f"- Ingen användare hittades som matchar HSA-ID och arbetsplats. \n"
             root.after(10, print_text_in_text_box, "Ingen användare hittades som matchar HSA-ID och arbetsplats. Kontrollera manuellt.")
-
             raise NoUserFoundException
 
         else:
@@ -598,7 +738,6 @@ def open_personpost(workplace, workplace_input, user_titel, hsa_id_input, close_
             dojo_grid_row[personpost_position]).perform()
         sleep(0.4)
 
-        
 
         WebDriverWait(driver, 10).until(
             ec.presence_of_element_located((
@@ -607,7 +746,8 @@ def open_personpost(workplace, workplace_input, user_titel, hsa_id_input, close_
         ).click()
     
     else:
-        print("Något gick fel med öppnandet av personposten!")
+        root.after(10, print_text_in_text_box, "Något gick fel med öppnandet av personposten!")
+        raise NoUserFoundException
 
     # Byt fokus till nya fönstret
     window_before = driver.window_handles[0]
@@ -651,18 +791,7 @@ def add_pipemail_role(user_titel, window_before):
     """
     global log_string
 
-    # Klicka på Menyval i redigera fönstret
-    WebDriverWait(driver, 10).until(
-        ec.presence_of_element_located((By.ID, "dijit_MenuBar_0"))
-    ).click()
-
-    sleep(0.7)
-
-    # klicka på behörigheter och roller
-    WebDriverWait(driver, 10).until(
-        ec.presence_of_element_located(
-            (By.XPATH, "//td[text()='Behörigheter och roller']"))
-    ).click()
+    change_menyval("Behörigheter och roller")
 
     # klicka på Lägg till
     WebDriverWait(driver, 10).until(
@@ -749,7 +878,9 @@ def add_pipemail_role(user_titel, window_before):
     return
 
 
-def add_groupcode(hsa_id_input, user_titel, workplace, personpost_position, window_before):
+def add_groupcode(hsa_id_input, user_titel, workplace, workplace_input, personpost_position, window_before):
+
+
     global kk_obstetriken_enheter
     global kk_gynekologen_enheter
     global log_string
@@ -757,7 +888,7 @@ def add_groupcode(hsa_id_input, user_titel, workplace, personpost_position, wind
     if user_titel == "lak" or user_titel == "at_lak":
         root.after(10, print_text_in_text_box, "\nKollar förskrivarkod")
 
-        open_personpost(workplace, workplace, user_titel, hsa_id_input, False, personpost_position=personpost_position)
+        open_personpost(workplace, workplace_input, hsa_id_input, False, personpost_position=personpost_position)
 
         # Klicka på Menyval i redigera fönstret
         WebDriverWait(driver, 10).until(
@@ -1098,6 +1229,34 @@ def create_lifecare_user(hsa_id_input):
     log_string += "- Konto i LifeCare skapat. \n"
     root.after(10, print_text_in_text_box, "Konto skapat")
 
+def search_for_hsa_id_in_lifecare_after_sign_in(hsa_id_input):
+        """
+        Namnet på funktionen säger sig självt.
+        """
+        WebDriverWait(driver, 10).until(
+            ec.presence_of_element_located((
+                By.XPATH, '//*[@id="nav"]/li[2]/a[@title="Användare"]'
+            ))
+        ).click()
+        
+        # Kollar om användaren finns i systemet redan genom att söka på HSA-IDt.
+        # Sök fältet
+        search_field = WebDriverWait(driver, 10).until(
+            ec.presence_of_element_located((
+                By.ID, 'searchText'
+            ))
+        )
+
+        # Skriver in i sökfältet och klickar på att den ska söka på inaktiva
+        show_inactive_button = WebDriverWait(driver, 10).until(
+            ec.presence_of_element_located((
+                By.ID, 'showInactive'
+            ))
+        )
+        show_inactive_button.click()
+
+        search_field.send_keys(hsa_id_input)
+        search_field.send_keys(Keys.RETURN)
 
 def add_lifecare(user_titel, hsa_id_input, workplace_input, kk_workplace):
     """
@@ -1154,29 +1313,7 @@ def add_lifecare(user_titel, hsa_id_input, workplace_input, kk_workplace):
                    
         # Klicka på användarknappen
         
-        WebDriverWait(driver, 10).until(
-            ec.presence_of_element_located((
-                By.XPATH, '//*[@id="nav"]/li[2]/a[@title="Användare"]'
-            ))
-        ).click()
-        
-        # Kollar om användaren finns i systemet redan genom att söka på HSA-IDt.
-        # Sök fältet
-        search_field = WebDriverWait(driver, 10).until(
-            ec.presence_of_element_located((
-                By.ID, 'searchText'
-            ))
-        )
-
-        # Skriver in i sökfältet och klickar på att den ska söka på inaktiva
-        show_inactive_button = WebDriverWait(driver, 10).until(
-            ec.presence_of_element_located((
-                By.ID, 'showInactive'
-            ))
-        )
-        show_inactive_button.click()
-        search_field.send_keys(hsa_id_input)
-        search_field.send_keys(Keys.RETURN)
+        search_for_hsa_id_in_lifecare_after_sign_in(hsa_id_input)
 
         # Kollar om det dyker upp något sök resultat och klickar på den om det hittas annars kör den funktionen för att skapa ett nytt konto.
         try:
@@ -1292,12 +1429,377 @@ def add_lifecare_mu(all_units, workplace_input):
             root.after(10, print_text_in_text_box, "Konto inte skapat för LifeCare då det inte är prod. Skippar de nästa stegen.")
             log_string += "- Konto inte skapat för LifeCare då det inte är prod. Skippar de nästa stegen."
         else:
-            print("Något gick fel. Kontrollera manuellt")
             root.after(10, print_text_in_text_box, "Något gick fel. Kontrollera manuellt")
             log_string += "- Något gick fel i skapandet av LifeCare kontot."
 
+def open_personpost_for_removal_of_mu(hsa_id_input, close_redigera_window_after_funk, personpost_position=None):
+    """
+    Öppnar personposten och tar fram förnam och efternamn på användaren.
+    close_redigera_window tar endast emot True or False för att kolla om man vill stänga redigera fönstret.
+    personpost_position tar en position i siffer form som den går in per automatik utan att skanna saker.
+    """
+    global first_name
+    global last_name
+    global log_string
+    global prod
+    global chosen_personpost
 
-def send_ids_mail(user_titel_full, hsa_id_input, new_ids_account):
+    chosen_personpost = None
+
+    search_hsa_id(hsa_id_input)
+      
+    # Tar fram alla sök resultat i en lista
+    dojo_grid_row = driver.find_elements(By.CLASS_NAME, "dojoxGridRowTable")
+
+    # Om en personpost position har följt med i callet till funktionen så väljer den den positionen direkt,
+    # och hoppar över skanningarna av personposterna.
+
+    personpost_positions = []
+
+    for index, i in enumerate(dojo_grid_row):
+        # Hoppar över första loopen för det är raden för namnen på varje kolumn, ex "status", "e-post"
+        if index == 0:
+            pass
+        else:
+            hover_cell = i.find_element(By.XPATH, ".//td[2]")
+            action.move_to_element(hover_cell).perform()
+            sleep(0.4)
+
+            ek_workplace = driver.find_element(
+                By.XPATH, "//*[@id='dijit__MasterTooltip_0']/div[1]").text  
+            
+            if "Södersjukhuset AB" not in ek_workplace:
+                personpost_positions.append(index)
+            
+            if "Södersjukhuset AB" in ek_workplace:
+                # Här sparas de personposter som är utanför VO för att sedan loopas igenom och kolla om man vill fortsätta med den.
+                root.after(10, print_text_in_text_box, "Användaren har en personpost på SÖS. Avbryter.")
+                raise NoUserFoundException
+
+    if len(personpost_positions) == 1:
+        personpost_position = personpost_positions[0]
+
+
+    # Kollar vilken personpost man vill fortsätta med. Ifall det är 2 personposter på samma VO eller under någon annan enhet på SÖS.
+    elif len(personpost_positions) > 1:
+        # Om man väljer att fortsätta med personpost utanför VO, sparas positionen på personposten i chosen_personposts_not_in_vo
+
+        for x in personpost_positions:
+            continue_with_personpost = messagebox.askyesno(
+                f"Har flera personposter på samma VO ", f"Användaren har flera personposter på samma VO. Vill du fortsätta med personposten på plats {x} i EK? Räknat uppefrån och ner i listan på personposter användaren har."
+            )
+
+            if continue_with_personpost:
+                personpost_position = x
+                break
+        
+        if not personpost_position:
+            log_string += f"- Ingen användare hittades i EK\n"
+            root.after(10, print_text_in_text_box, "Ingen användare hittades i EK")
+            raise NoUserFoundException
+
+    elif len(personpost_positions) == 0:
+        log_string += f"- Ingen användare hittades i EK\n"
+        root.after(10, print_text_in_text_box, "Ingen användare hittades i EK")
+        raise NoUserFoundException
+
+    else:
+        root.after(10, print_text_in_text_box, "Något gick fel när personposten skulle öppnas.")
+        raise NoUserFoundException
+        
+
+    if personpost_position:
+        hover_cell = dojo_grid_row[personpost_position].find_element(By.XPATH, ".//td[2]")
+        action.move_to_element(hover_cell).perform()
+        sleep(0.2)
+        ek_workplace = driver.find_element(By.XPATH, "//*[@id='dijit__MasterTooltip_0']/div[1]").text
+        
+        action.context_click(
+            dojo_grid_row[personpost_position]
+        ).perform()
+
+        sleep(0.4)
+
+        WebDriverWait(driver, 10).until(
+            ec.presence_of_element_located((
+                By.XPATH, "//td[text()='Redigera']"
+            ))
+        ).click()
+    
+    else:
+        root.after(10, print_text_in_text_box, "Något gick fel med öppnandet av personposten!")
+        raise NoUserFoundException
+
+    # Byt fokus till nya fönstret
+    window_before = driver.window_handles[0]
+    window_after = driver.window_handles[1]
+    driver.switch_to.window(window_after)
+
+    if close_redigera_window_after_funk:
+        root.after(0, print_text_in_text_box, "Tagit fram förnamn och efternamn från EK")
+        driver.close()
+        driver.switch_to.window(window_before)
+
+        return 
+    
+    elif not close_redigera_window_after_funk:
+
+        return window_before
+    
+def get_mu_fom_personpost_and_remove_mu(hsa_id, window_before):
+    global log_string
+    continue_with_personpost_removal = True
+
+    change_menyval("Vårdmedarbetaruppdrag")
+
+    #Tar fram alla rader i tabellen
+    try:
+
+        all_personpost_mu = WebDriverWait(driver, 10).until(
+            ec.presence_of_all_elements_located((
+                By.XPATH, '//table[@id="admintable"]/tbody/tr/td/a[contains(@onmouseover, "Södersjukhuset AB,Stockholms Läns Landsting")]'
+            ))
+        )
+    except TimeoutException: 
+        # Om det inte finns några MUs. fortsätt inte.
+        continue_with_personpost_removal = False
+        return continue_with_personpost_removal
+
+    # om det är endast ett mu kvar. Fortsätt inte att ta bort MUs då det är inga kvar efter borttag efter den ena. 
+    if len(all_personpost_mu) == 1:
+        continue_with_personpost_removal= False
+    
+    # Klickar in på första mu:t och tar bort
+    all_personpost_mu[0].click()
+
+    change_menyval("Vårdmedarbetaruppdragets medlemmar")
+
+    # Högerklickar på hsa-id så att man kan söka.
+    hsa_id_search_in_mu = WebDriverWait(driver, 10).until(
+        ec.presence_of_element_located((
+            By.XPATH, '//div[contains(@class, "dojoxGridSortNode") and text() = "HSA-id"]'
+        ))
+    )
+
+    action.context_click(
+            hsa_id_search_in_mu
+    ).perform()
+    
+    # Skriver in HSA-ID i sökrutan som dyker upp.
+    grid_filter_box = WebDriverWait(driver, 10).until(
+        ec.presence_of_element_located((
+            By.ID, 'gridFilterBox'
+        ))
+    )
+
+    grid_filter_box.send_keys(hsa_id.upper() + Keys.RETURN)
+    sleep(1)
+
+    
+    # Klickar i bockrutan för att ta bort.
+    WebDriverWait(driver, 10).until(
+        ec.presence_of_element_located((
+            By.XPATH, '//td/div[contains(@class, "dojoxGridCheckSelector")]'
+        ))
+    ).click()
+
+    sleep(0.5)
+
+    # Klickar på ta bort
+    WebDriverWait(driver, 10).until(
+        ec.presence_of_element_located((
+            By.XPATH, '//span[text()="Ta bort"]'
+        ))
+    ).click()
+
+    sleep(3)
+
+    temp_log_string = f'Tagit bort behörighet för MU {driver.title.replace("Edit object:", "").replace("- Google Chrome", "")}'
+
+    # Om det är prod. Klicka på spara stäng.
+    if prod:
+        
+        WebDriverWait(driver, 10).until(
+            ec.presence_of_element_located((
+                By.ID,
+                "saveButton"
+            ))
+        ).click()
+
+    if not prod:
+        root.after(10, print_text_in_text_box, "Sparar ej. inte i prod")
+
+    log_string += temp_log_string
+    root.after(10, print_text_in_text_box, temp_log_string + "\n")
+    if not prod:
+        driver.close()
+
+    driver.switch_to.window(window_before)
+
+
+    return continue_with_personpost_removal
+
+
+def remove_lifecare(user_titel, hsa_id_input):
+    """
+    Funktion för att lägga till behörighet för användare i LifeCare
+    """
+
+    global log_string
+    global prod
+    global driver
+
+    if user_titel == "ssk":
+
+        root.after(10, print_text_in_text_box, "\nTar bort behörighet för LifeCare")
+
+        # Går in på LifeCare
+        driver.get(r"https://lifecare.regionstockholm.se/sp/#/commission")
+
+        # Försöker att klicka på "logga in med e-Tjänstekort" i IDP inloggningen,
+        # om den failar med att hitta elementet så skippa steget för då är man eventuellt inloggad.
+        try:
+            WebDriverWait(driver, 5).until(
+                ec.presence_of_element_located((
+                    By.XPATH, '//*[@id="signin-wrapper"]/div/form/div[1]/a'
+                ))
+            ).click()
+
+        except TimeoutException:
+            pass
+        
+        try:
+            WebDriverWait(driver, 5).until(
+                ec.presence_of_element_located((
+                    By.XPATH, f'//h3[text()="Infektionskliniken-Venhälsan - Södersjukhuset AB"]/../../button'
+                ))
+            ).click()
+        except TimeoutException:
+            #Om denna knappen inte hittas är man inte inloggad
+            root.after(10, print_text_in_text_box, "Något gick fel vid inloggning i LifeCare, kontrollera manuellt")
+            log_string += "Något gick fel med inloggningen i LifeCare, lades inte till. \n"
+            return ()
+                   
+        # Klicka på användarknappen
+        
+        search_for_hsa_id_in_lifecare_after_sign_in(hsa_id_input)
+
+        sleep(10)
+       
+        try:
+            # ----- Kollar om den hittar kontot
+            WebDriverWait(driver, 10).until(
+                ec.presence_of_element_located((
+                    By.XPATH, f'//div[text()="SE2321000016-{hsa_id_input.upper()}"]'
+                ))
+            ).click()
+
+        except TimeoutException:
+            # ----- Om den inte hittar HSA-IDt är kontot redan borttaget!
+            root.after(10, print_text_in_text_box, "LifeCare kontot är redan borttaget")
+            log_string += "- LifeCare kontot är redan borttaget."
+
+            return
+        
+        # Tar fram en lista på alla medarbetaruppdrag som finns på användaren.
+        try:
+            all_lifecare_mu = WebDriverWait(driver, 10).until(
+                ec.presence_of_all_elements_located((
+                    By.XPATH, "//div[contains(@class, 'accordion-item')]"
+                ))
+            )
+        except TimeoutException:
+            # ----- Om den inte hittar något MU är det redan borttaget eller inte haft något
+            root.after(10, print_text_in_text_box, "LifeCare kontot är redan borttaget eller har inte haft någon behörighet till sös.")
+            log_string += "- LifeCare kontot är redan borttaget."
+            return
+            
+        all_sös_lifecare_mu = []
+
+        for i in all_lifecare_mu:
+            lifecare_mu_name = WebDriverWait(driver, 10).until(
+                ec.presence_of_element_located((
+                    By.XPATH, '//h2/button/span/div/label'
+                ))
+            ).text
+
+            if "- Södersjukhuset AB" in lifecare_mu_name:
+                all_sös_lifecare_mu.append(lifecare_mu_name)
+
+        for i in all_sös_lifecare_mu:
+            remove_lifecare_sös_mu(i, hsa_id_input)
+
+def remove_lifecare_sös_mu(lifecare_mu, hsa_id_input):
+    """
+    Funktion för att ta bort MU i Lifecare på en användare. Tar hela namnet på lifecare_mu och hsaidt. tex ("Akut - Södersjukhuset AB", "1234")
+    """
+
+    global prod
+    global log_string
+
+    if "(INAKTIV)" in lifecare_mu:
+        return
+
+    driver.get(r"https://lifecare.regionstockholm.se/sp/#/commission")
+
+    # Försöker att klicka på "logga in med e-Tjänstekort" i IDP inloggningen,
+    # om den failar med att hitta elementet så skippa steget för då är man eventuellt inloggad.
+    try:
+        WebDriverWait(driver, 5).until(
+            ec.presence_of_element_located((
+                By.XPATH, '//*[@id="signin-wrapper"]/div/form/div[1]/a'
+            ))
+        ).click()
+
+    except TimeoutException:
+        pass
+
+    WebDriverWait(driver, 5).until(
+        ec.presence_of_element_located((
+            By.XPATH, f'//h3[text()="{lifecare_mu}"]/../../button'
+        ))
+    ).click()
+
+    search_for_hsa_id_in_lifecare_after_sign_in(hsa_id_input)
+
+    WebDriverWait(driver, 10).until(
+        ec.presence_of_element_located((
+            By.XPATH, f'//div[text()="SE2321000016-{hsa_id_input}"]'
+        ))
+    ).click()
+
+    WebDriverWait(driver, 10).until(
+        ec.presence_of_element_located((
+            By.XPATH, f'//span[text()="Ändra"]/../..'
+        ))
+    ).click()
+
+    WebDriverWait(driver, 10).until(
+        ec.presence_of_element_located((
+            By.XPATH, f"//div[contains(@class, 'accordion-item')]/h2/button/span/div/label[text()=' {lifecare_mu} ']" # Måste vara space runt lifecare_mu för att det är så i HTMLen
+        ))
+    ).click()
+
+    WebDriverWait(driver, 10).until(
+        ec.presence_of_element_located((
+            By.XPATH, f"//div[contains(@class, 'accordion-item')]/h2/button/span/div/label[text()=' Kirurgi - Södersjukhuset AB ']/../../../../..//button[@ngbtooltip = 'Ta bort']"
+        ))
+    ).click()
+
+    if prod:
+        WebDriverWait(driver, 10).until(
+            ec.presence_of_element_located((
+                By.XPATH, "//ngb-modal-window//button/span[text()='Ja']"
+            ))
+        ).click()
+        root.after(10, print_text_in_text_box, "LifeCare kontot är nu borttaget")
+        log_string += "- LifeCare kontot är borttaget"
+    else: 
+        root.after(10, print_text_in_text_box, "LifeCare kontot är INTE borttaget. Inte prod.")
+    sleep(1)
+
+
+def send_ids_mail(user_titel_full, hsa_id_input, new_ids_account, remove_ids_account=False):
     """
     Skickar mail för nytt konto till IDS7(Ris och Pacs).\n 
     Funktionen är beroende av att förnamn och efternamn tas när rörpost läggs till i EK.
@@ -1307,25 +1809,33 @@ def send_ids_mail(user_titel_full, hsa_id_input, new_ids_account):
     global log_string
     global prod
 
-    if new_ids_account:
+    if new_ids_account or remove_ids_account:
                
         root.after(10, print_text_in_text_box, "\nSkapar ett mail för ids7")
 
         outlook_app = win32.Dispatch("Outlook.Application", CoInitialize())
         outlook_NS = outlook_app.GetNameSpace("MAPI")
 
+        temp_mail_body = "Hej,\n"
+        if new_ids_account:
+            temp_mail_body += f"Ny användare, {first_name} {last_name} ({hsa_id_input.lower()}) ({user_titel_full}).\n\n"
+        elif remove_ids_account:
+            temp_mail_body += f"Användare slutar, {hsa_id_input.lower()}.\n\n"
+        else:
+            root.after(10, print_text_in_text_box, "\nNågot gick fel med skapandet av mailet!")
+            return
+        temp_mail_body += "Med vänliga hälsningar \n\n" +\
+        "SÖS Kontocentral \n" +\
+        "Region Stockholm \n" +\
+        "Telefon: 08-123 180 73 \n" +\
+        "E-post: kontocentralen.sf@regionstockholm.se"
+
         mailitem = outlook_app.CreateItem(0)
-        mailitem.Subject = "Ny användare"
+        mailitem.Subject = "Ny användare" if new_ids_account else "Användare slutar"
         mailitem.BodyFormat = 1
         mailitem.To = "bild-itbestallning.sodersjukhuset@regionstockholm.se"
         mailitem.SentOnBehalfOfName = "kontocentralen.sf@regionstockholm.se"
-        mailitem.Body = "Hej,\n" +\
-                        f"Ny användare, {first_name} {last_name} ({hsa_id_input.lower()}) ({user_titel_full}).\n\n" +\
-                        "Med vänliga hälsningar \n\n" +\
-                        "SÖS Kontocentral \n" +\
-                        "Region Stockholm \n" +\
-                        "Telefon: 08-123 180 73 \n" +\
-                        "E-post: kontocentralen.sf@regionstockholm.se"
+        mailitem.Body = temp_mail_body
         if prod:
             mailitem.Send()
             root.after(0, print_text_in_text_box, "IDS7 mail skickat")
@@ -1335,9 +1845,10 @@ def send_ids_mail(user_titel_full, hsa_id_input, new_ids_account):
             root.after(0, print_text_in_text_box, "IDS7 mail inte skickat, inte i prod")
             log_string += "- Mail för IDS7 inte skickat, inte prod"
 
+
         CoUninitialize()
 
-def create_close_mail(user_titel_full, hsa_id_input, case_number, new_or_remove, titel=""):
+def create_close_mail(user_titel_full, hsa_id_input, case_number, new_or_remove):
         
         global first_name
         global last_name
@@ -1438,21 +1949,21 @@ def add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, use
             # Läkarsekreterare ska endast ha IDS mail och Lösnings beskrivningen.
             
             # Tar endast fram namn på open personpost
-            open_personpost(workplace, workplace_input, user_titel, hsa_id_input, True)
+            open_personpost(workplace, workplace_input, hsa_id_input, True)
 
-            send_ids_mail(user_titel, hsa_id_input, new_ids_account)
+            send_ids_mail(user_titel_full, hsa_id_input, new_ids_account)
 
-            create_close_mail(user_titel, hsa_id_input, case_number, "new")
+            create_close_mail(user_titel_full, hsa_id_input, case_number, "new")
 
         else:
             # För rörpost
-            kk_workplace, personpost_position, close_redigera_window_after_open_personpost, window_before, ek_workplace = open_personpost(workplace, workplace_input, user_titel, hsa_id_input, False)
+            kk_workplace, personpost_position, close_redigera_window_after_open_personpost, window_before, ek_workplace = open_personpost(workplace, workplace_input, hsa_id_input, False)
 
             if not close_redigera_window_after_open_personpost:
                 add_pipemail_role(user_titel, window_before)
 
             # Förskrivarkod
-            add_groupcode(hsa_id_input, user_titel, workplace, personpost_position, window_before)
+            add_groupcode(hsa_id_input, user_titel, workplace, workplace_input, personpost_position, window_before)
 
             # För Pascal
             add_pascal(user_titel, hsa_id_input,
@@ -1465,14 +1976,14 @@ def add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, use
             add_lifecare(user_titel, hsa_id_input, workplace_input, kk_workplace)
 
             # Skickar mail för konto i ids7 / Ris & Pacs
-            send_ids_mail(user_titel, user_titel_full, hsa_id_input, new_ids_account)
+            send_ids_mail(user_titel_full, hsa_id_input, new_ids_account)
 
             # Skapar upp mall för lösningsmailet
-            create_close_mail(user_titel, hsa_id_input, case_number, "new")
+            create_close_mail(user_titel_full, hsa_id_input, case_number, "new")
 
         write_log(log_string)
 
-        root.after(10, print_text_in_text_box, f"\n{hsa_id_input} Klar")
+        root.after(10, print_text_in_text_box, f"\n{hsa_id_input.upper()} Klar")
         handle_of_the_window_before_minimizing = driver.current_window_handle
         driver.minimize_window()
 
@@ -1480,6 +1991,53 @@ def add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, use
         root.after(10, print_text_in_text_box, "Edge är nerstängt, öppnar på nytt")
         times_run = 0
         add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, hsa_id_input, new_ids_account, case_number)
+
+
+def remove_permissions(user_titel, user_titel_full, hsa_id_input, case_number):
+    global log_string
+    global first_name
+    global last_name
+    global times_run
+    global handle_of_the_window_before_minimizing
+
+    if times_run == 0:
+        open_browser()
+
+    try:
+        try:
+            driver.switch_to.window(handle_of_the_window_before_minimizing)
+            driver.set_window_rect(0, 0)
+        except NameError:
+            pass
+        
+        try:
+            continue_with_personpost_removal = True
+            while continue_with_personpost_removal:
+
+                window_before = open_personpost_for_removal_of_mu(hsa_id_input, False)
+
+                continue_with_personpost_removal = get_mu_fom_personpost_and_remove_mu(hsa_id_input, window_before)
+        except NoUserFoundException:
+            root.after(10, print_text_in_text_box, f"\nHittade inte personposten. Tar inte bort några VMUn")
+
+        remove_lifecare(user_titel, hsa_id_input)
+
+        send_ids_mail(user_titel_full, hsa_id_input, new_ids_account=False, remove_ids_account=True)
+
+        create_close_mail(user_titel_full, hsa_id_input, case_number, "remove")
+        
+        write_log(log_string)
+
+        root.after(10, print_text_in_text_box, f"\n{hsa_id_input.upper()} Klar")
+        handle_of_the_window_before_minimizing = driver.current_window_handle
+        driver.minimize_window()
+
+    except NoSuchWindowException:
+        root.after(10, print_text_in_text_box, "Edge är nerstängt, öppnar på nytt")
+        times_run = 0
+        remove_permissions(user_titel, user_titel_full, hsa_id_input, case_number)
+
+
 
 def run(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, user_titel_full, hsa_id_input, new_ids_account, case_number):
 
@@ -1495,6 +2053,36 @@ def run(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, use
 
     try:
         add_permissions(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, user_titel_full, hsa_id_input, new_ids_account, case_number)
+    except NoUserFoundException:
+        handle_of_the_window_before_minimizing = driver.current_window_handle
+        driver.minimize_window
+        write_log(log_string)
+    except MoreThanOneAvailablePersonpost:
+        handle_of_the_window_before_minimizing = driver.current_window_handle
+        driver.minimize_window
+        write_log(log_string)
+
+
+    root.after(0, print_text_in_text_box, "-"*90 + "\n")
+
+    first_name = ""
+    last_name = ""
+    times_run += 1
+
+def run_remove(user_titel, user_titel_full, hsa_id_input, case_number):
+
+    global log_string
+    global first_name
+    global last_name
+    global times_run
+    global driver
+    global handle_of_the_window_before_minimizing
+
+    log_string += ("\n" + "#"*40 + "\n")
+    log_string += f'{datetime.now().strftime("%Y-%m-%d, %H:%M")} - {os.getlogin().upper()} tar bort behörigheter på HSA-ID {hsa_id_input}\n'
+
+    try:
+        remove_permissions(user_titel, user_titel_full, hsa_id_input, case_number)
     except NoUserFoundException:
         handle_of_the_window_before_minimizing = driver.current_window_handle
         driver.minimize_window

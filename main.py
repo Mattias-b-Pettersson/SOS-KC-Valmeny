@@ -23,7 +23,7 @@ import os
 # Skapad av Mattias Pettersson @ Serviceförvaltningen #
 #######################################################
 
-prod = True
+prod = False
 log_string = ""
 first_name = ""
 last_name = ""
@@ -128,7 +128,7 @@ def get_input():
         state="readonly",
         values=[
             "Akuten",
-            "Anestesin/IVA",
+            "Perioperativ vård och Intensivvård - PVI",
             "Bild", 
             "Infektionskliniken-Venhälsan",
             "Internmedicin",
@@ -182,7 +182,7 @@ def get_input():
             case_number_entry.get(),
             case_number_entry,
             hsa_id_entry,
-            "new"
+            new_or_remove="new"
         )
     )
     create_newaccount_closemail_button.grid(row=11, column=0, pady=(0,20), padx=(30,10))
@@ -280,10 +280,14 @@ def create_closemail_button_func(user_titel, hsa_id_input, case_number, case_num
     if len(hsa_id_input) != 4:
         messagebox.showerror("SÖS-KC Valmeny error", "HSA-ID inte 4 karaktärer långt. Gör om gör rätt")
         return
+    
+    if len(case_number) == 0:
+        messagebox.showerror("SÖS-KC Valmeny error", "Saknas ärendenummer")
+        return
 
     # Skapar upp mailet med funktionen nedan
     if new_or_remove == "new":
-        create_close_mail(user_titel, hsa_id_input, case_number, "new")
+        create_close_mail(user_titel, hsa_id_input, case_number, new_or_remove="new")
     elif new_or_remove == "remove":
         create_close_mail(user_titel, hsa_id_input, case_number, "remove")
     else:
@@ -296,7 +300,7 @@ def create_closemail_button_func(user_titel, hsa_id_input, case_number, case_num
     hsa_id_entry.delete(0, "end")
 
     print("\nKlart. Väntar på ny input...")
-    root.after(0, print_text_in_text_box, f"\n{hsa_id_input} Klar")
+    root.after(0, print_text_in_text_box, f"\n{hsa_id_input} Klar!")
     root.after(0, print_text_in_text_box, "-"*90 + "\n")
 
 def check_input(hsa_id_input, user_titel, workplace_input, case_number, ids_account):
@@ -494,7 +498,7 @@ def handle_input(workplace_input, user_titel, hsa_id_input, new_ids_account, cas
 
     workplace_dictonary = {
         "Akuten": "aku",
-        "Anestesin/IVA": "ane",
+        "Perioperativ vård och Intensivvård - PVI": "ane",
         "Bild": "bild",
         "Internmedicin": "int",
         "Kardiologin": "kar",
@@ -516,7 +520,7 @@ def handle_input(workplace_input, user_titel, hsa_id_input, new_ids_account, cas
 
     all_units_ek = {
         "aku": "Akut, Södersjukhuset AB",
-        "ane": "Anestesi IVA, Södersjukhuset AB",
+        "ane": "Perioperativ vård och Intensivvård - PVI, Södersjukhuset AB",
         "bild": "Bilddiagnostik, Södersjukhuset AB",
         "int": "Internmedicin, Södersjukhuset AB",
         "kar": "Kardiologi, Södersjukhuset AB",
@@ -1475,7 +1479,7 @@ def open_personpost_for_removal_of_mu(hsa_id_input, close_redigera_window_after_
             ).text
 
             if "Södersjukhuset AB" in ek_workplace:
-                # Här sparas de personposter som är utanför VO för att sedan loopas igenom och kolla om man vill fortsätta med den.
+                # Här sparas de om personposter som är utanför SÖS
 
                 root.after(10, print_text_in_text_box, "Hittade en personpost på SÖS.")
                 personpost_in_sös = True
@@ -1848,7 +1852,7 @@ def create_close_mail(user_titel_full, hsa_id_input, case_number, new_or_remove)
 
             if new_or_remove == "new":
                 mailitem.Body = "Hej,\n\n" +\
-                            f"Standardprofil {user_titel_full if user_titel_full else ''} är klar för {first_name if first_name else ''} {last_name if last_name else ''} ({hsa_id_input.lower()}).\n\n" +\
+                            f"Standardprofil {user_titel_full if user_titel_full else ''} är klar för {first_name if first_name else ''} {last_name if last_name else ''} ({hsa_id_input.upper()}).\n\n" +\
                             "Med vänliga hälsningar \n\n" +\
                             "SÖS Kontocentral \n" +\
                             "Region Stockholm \n" +\
@@ -1857,7 +1861,7 @@ def create_close_mail(user_titel_full, hsa_id_input, case_number, new_or_remove)
                 
             elif new_or_remove == "remove":
                 mailitem.Body = "Hej,\n\n" +\
-                            f"Avaktivering klar för användare {first_name if first_name else ''} {last_name if last_name else ''} ({hsa_id_input.lower()}).\n\n" +\
+                            f"Inaktivering klar för användare {first_name if first_name else ''} {last_name if last_name else ''} ({hsa_id_input.upper()}).\n\n" +\
                             "Med vänliga hälsningar \n\n" +\
                             "SÖS Kontocentral \n" +\
                             "Region Stockholm \n" +\
@@ -2002,7 +2006,11 @@ def remove_permissions(user_titel, user_titel_full, hsa_id_input, case_number, s
                 continue_with_personpost_removal = get_mu_fom_personpost_and_remove_mu(hsa_id_input, window_before)
         except NoUserFoundException:
             # Meddelandet som dyker upp hanteras i open_personpost_for_removal_of_mu
-            pass
+            root.after(10, print_text_in_text_box, f"\n{hsa_id_input.upper()} Hoppar över borttag då den har personpost på sös eller saknar personpost.")
+            write_log(log_string)
+            handle_of_the_window_before_minimizing = driver.current_window_handle
+            driver.minimize_window()
+            return
 
         remove_lifecare(user_titel, hsa_id_input)
 
@@ -2025,7 +2033,6 @@ def remove_permissions(user_titel, user_titel_full, hsa_id_input, case_number, s
 
 
 def run(workplace, workplace_input, vard_och_behandling_vmu_hsa, user_titel, user_titel_full, hsa_id_input, new_ids_account, case_number):
-
     global log_string
     global first_name
     global last_name

@@ -600,11 +600,23 @@ def search_hsa_id(hsa):
         driver.get(url_ek)
     except TimeoutException:
         log_string += "- Något gick fel vid öppnandet av EK. Inget gjordes. \n"
+    
+    
+    try:
+        # Försöker att Klickar på sök knappen
+        WebDriverWait(driver, 4).until(
+            ec.presence_of_element_located((By.LINK_TEXT, "Sök"))
+        ).click()
+    except:
+        # Om sökknappen inte hittas så klickar den på logga in med eTjänstekort.
+        WebDriverWait(driver, 5).until(
+            ec.presence_of_element_located((By.XPATH, '//span[text()="eTjänstekort"]/..'))
+        ).click()
 
-    # Klickar på sök knappen
-    WebDriverWait(driver, 20).until(
-        ec.presence_of_element_located((By.LINK_TEXT, "Sök"))
-    ).click()
+        # Och sedan försöker klicka på sök igen.
+        WebDriverWait(driver, 5).until(
+            ec.presence_of_element_located((By.LINK_TEXT, "Sök"))
+        ).click()
 
     # Skriver in HSA-IDt som har angets som input till funktionen och klickar enter för att söka
     hsaid_input = WebDriverWait(driver, 7).until(
@@ -1156,10 +1168,10 @@ def add_frapp(hsa_id_input, user_titel, workplace_input, ek_workplace):
 
     if user_titel == "lak":
         
-        if workplace_input == "aku":
+        if workplace_input == "Akuten":
             # B8Z2 är HSA-IDt till "Ambulans-AnnanVG-Läkare tillgång ambulansjournal-" under akuten
             add_vmu("B8Z2", hsa_id_input)
-        elif workplace_input == "kar":
+        elif workplace_input == "Kardiologin":
             # 9XNR är HSA-IDt till "Ambulans-AnnanVG-Läkare tillgång ambulansjournal-" under Kardiologin
             add_vmu("9XNR", hsa_id_input)
         else:

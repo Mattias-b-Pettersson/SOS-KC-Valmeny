@@ -26,7 +26,7 @@ import os
 #######################################################
 
 
-prod = True
+prod = False
 log_string = ""
 first_name = ""
 last_name = ""
@@ -1094,7 +1094,6 @@ def add_vmu(hsa, hsa_id_input):
     log_string += f'- Lagt till Vårdmedarbetaruppdrag "{vmu_name}". \n'
     print(f'Lyckades lägga till {hsa_id_input.upper()} i "{vmu_name}".')
 
-
 # Easteregg: aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ==
 # T20gZHUgbHlja2FzIGxpc3RhIHV0IGRldCBow6RyIGbDpXIgZHUgZ8Okcm5hIGtvbnRha3RhIG1pZyAoTWF0dGlhcykgb2NoIHPDpGdhIGF0dCBkdSBrbsOkY2t0ZSBuw7Z0ZW4hIA==
 
@@ -1109,14 +1108,14 @@ def add_pascal(user_titel, hsa_id_input, vard_och_behandling_vmu_hsa, workplace_
         root.after(0, print_text_in_text_box, "\nLägger till behörighet för Pascal")
 
     if user_titel == "lak":
-        if workplace_input == "kk":
-            all_units = {
+        if workplace_input == "Kvinnosjukvård och förlossning":
+            kk_units = {
                 "gyn": "83L0",
                 "obs": "83KZ",
                 "sacskydd": "8442"
             }
 
-            for x in all_units.values():
+            for x in kk_units.values():
                 add_vmu(x, hsa_id_input)
 
         else:
@@ -1126,7 +1125,7 @@ def add_pascal(user_titel, hsa_id_input, vard_och_behandling_vmu_hsa, workplace_
                 add_vmu("73N6", hsa_id_input)
                 
     elif user_titel == "at_lak":
-        all_units = {
+        at_lak_units = {
             "aku": "73N6",
             "ane": "7T5P",
             "bild": "7T5Q",
@@ -1140,7 +1139,7 @@ def add_pascal(user_titel, hsa_id_input, vard_och_behandling_vmu_hsa, workplace_
             "sac": "7VR0"
         }
 
-        for x in all_units.values():
+        for x in at_lak_units.values():
             add_vmu(x, hsa_id_input)
 
     if user_titel == "ssk":
